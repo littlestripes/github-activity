@@ -3,7 +3,7 @@
 Small command line utility to check a Github user's recent activity.
 
 ## Dependencies
-`sudo dnf install libcurl-devel`
+`sudo dnf install libcurl-devel fmt-devel`
 
 ## Build
 `make`
