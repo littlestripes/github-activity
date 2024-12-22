@@ -1,8 +1,8 @@
 #include <curl/curl.h>
 #include <iostream>
 #include <string>
-#include <format>
 #include <cstdlib>
+#include <fmt/format.h>
 
 #include "json.hpp"
 #include "cxxopts.hpp"
@@ -24,7 +24,7 @@ size_t write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
 /**
  * @brief Builds and sends a GET request to the given API endpoint and returns JSON response data.
  *
- * @param endpoint The API endpoint to make a request to.
+ * @param endpoint  The API endpoint to make a request to.
  */
 std::string get_json_response(const std::string& endpoint) {
     CURL* curl;
@@ -35,6 +35,7 @@ std::string get_json_response(const std::string& endpoint) {
     if (curl) {
         struct curl_slist *headers = NULL;
         headers = curl_slist_append(headers, "accept: application/vnd.github+json");
+        headers = curl_slist_append(headers, "User-Agent: curl/8.6.0");
 
         // headers
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
@@ -50,12 +51,12 @@ std::string get_json_response(const std::string& endpoint) {
 
         curl_easy_cleanup(curl);
 
-        if (response == CURLE_OK) {
-            std::cout << read_buffer << std::endl;
-        } else {
+        if (response != CURLE_OK) {
             std::cerr << "Request failed: " << curl_easy_strerror(response) << std::endl;
         }
     }
+
+    return read_buffer;
 }
 
 /**
@@ -65,23 +66,32 @@ std::string get_json_response(const std::string& endpoint) {
  * @returns         The complete API endpoint.
  */
 std::string format_api_endpoint(const std::string& username) {
-    return std::format("https://api.github.com/users/{}/events", username);
+    return fmt::format("https://api.github.com/users/{}/events", username);
 }
 
 int main(const int argc, const char* argv[]) {
     cxxopts::Options options("github-activity", "Get Github user activity");
 
     options.add_options()
-        ("username", "The Github username to fetch information for.", cxxopts::value<std::string>());
+        ("username", "The Github username to fetch information for.", cxxopts::value<std::string>())
+        ("h,help", "Show this message", cxxopts::value<bool>()->default_value("false"));
     options.parse_positional({"username"});
 
     try {
         auto shell_options = options.parse(argc, argv);
+
+        if (shell_options.count("help")) {
+            std::cout << options.help() << std::endl;
+            return EXIT_SUCCESS;
+        }
+
         auto username = shell_options["username"].as<std::string>();
         const std::string endpoint = format_api_endpoint(username);
 
+        const std::string response_data = get_json_response(endpoint);
     } catch (const cxxopts::exceptions::missing_argument& e) {
         std::cerr << "Error: " << e.what() << std::endl;
+        std::cout << options.help() << std::endl;
         return EXIT_FAILURE;
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
