@@ -89,12 +89,9 @@ int main(const int argc, const char* argv[]) {
         const std::string endpoint = format_api_endpoint(username);
 
         const std::string response_data = get_json_response(endpoint);
-    } catch (const cxxopts::exceptions::missing_argument& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        std::cout << options.help() << std::endl;
-        return EXIT_FAILURE;
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
+        std::cout << options.help() << std::endl;
         return EXIT_FAILURE;
     }
 
