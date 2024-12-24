@@ -70,7 +70,7 @@ std::string format_api_endpoint(const std::string& username) {
 }
 
 int main(const int argc, const char* argv[]) {
-    cxxopts::Options options("github-activity", "Fetch Github user activity");
+    cxxopts::Options options("github-activity");
 
     options.add_options()
         ("username", "The Github username to fetch information for.", cxxopts::value<std::string>())
