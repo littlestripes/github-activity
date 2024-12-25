@@ -7,6 +7,8 @@
 #include "json.hpp"
 #include "cxxopts.hpp"
 
+#define VERSION_STRING "github-activity version 0.1.0"
+
 /**
  * @brief Callback that handles HTTP response data.
  *
@@ -25,6 +27,7 @@ size_t write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
  * @brief Builds and sends a GET request to the given API endpoint and returns JSON response data.
  *
  * @param endpoint  The API endpoint to make a request to.
+ * @return          The response body (in JSON);
  */
 std::string get_json_response(const std::string& endpoint) {
     CURL* curl;
@@ -60,10 +63,40 @@ std::string get_json_response(const std::string& endpoint) {
 }
 
 /**
+ * @brief Represents a Github event. Contains the event type, time occurred, and referenced repo.
+ */
+struct Event {
+    std::string type;
+    std::string time;
+    std::string repo_name;
+
+    /**
+     * @brief Returns a human-readable string representation of the Event.
+     *
+     * @return A string containing the event data.
+     */
+    std::string to_str() const {
+        // TODO: switch/case for different event types
+        // Obviously we don't want to print "- WatchEvent ..."
+        return "";
+    }
+};
+
+/**
+ * @brief Takes a Github API JSON response and returns a vector of Events containing each event's data.
+ *
+ * @param response  The raw JSON response.
+ * @return          A vector containing Events.
+ */
+std::vector<Event> parse_json_response(const std::string& response) {
+    return std::vector<Event>();
+}
+
+/**
  * @brief Takes a Github username and returns the API endpoint for user activity.
  *
  * @param username  Github username.
- * @returns         The complete API endpoint.
+ * @return          The complete API endpoint.
  */
 std::string format_api_endpoint(const std::string& username) {
     return fmt::format("https://api.github.com/users/{}/events", username);
@@ -74,9 +107,10 @@ int main(const int argc, const char* argv[]) {
 
     options.add_options()
         ("username", "The Github username to fetch information for.", cxxopts::value<std::string>())
+        ("v,version", "Display version information.", cxxopts::value<bool>()->default_value("false"))
         ("h,help", "Show this message", cxxopts::value<bool>()->default_value("false"));
     options.parse_positional({"username"});
-    options.positional_help("<Github username>");
+    options.positional_help("<username>");
 
     try {
         auto shell_options = options.parse(argc, argv);
@@ -85,11 +119,16 @@ int main(const int argc, const char* argv[]) {
             std::cout << options.help() << std::endl;
             return EXIT_SUCCESS;
         }
+        if (shell_options.count("version")) {
+            std::cout << options.help() << std::endl;
+            return EXIT_SUCCESS;
+        }
 
         auto username = shell_options["username"].as<std::string>();
         const std::string endpoint = format_api_endpoint(username);
 
         const std::string response_data = get_json_response(endpoint);
+        const std::vector<Event> events = parse_json_response(response_data);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::cout << options.help() << std::endl;
