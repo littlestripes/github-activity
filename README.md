@@ -2,6 +2,8 @@
 
 Small command line utility to check a Github user's recent activity.
 
+Look [here](https://roadmap.sh/projects/github-user-activity) for project guidelines.
+
 ## Build
 ### Dependencies
 Fedora: `sudo dnf install gcc-c++ libcurl-devel fmt-devel pkg-config make`
