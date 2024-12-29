@@ -2,11 +2,11 @@
 
 Small command line utility to check a Github user's recent activity.
 
-## Dependencies
+## Build
+### Dependencies
 `sudo dnf install libcurl-devel fmt-devel`
 
-## Build
 `make`
 
-## Generate `compile_commands.json`
+### Generate `compile_commands.json`
 `bear -- make`
