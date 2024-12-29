@@ -401,7 +401,7 @@ int main(const int argc, const char* argv[]) {
             return EXIT_SUCCESS;
         }
         if (shell_options.count("version")) {
-            std::cout << options.help() << std::endl;
+            std::cout << VERSION_STRING << std::endl;
             return EXIT_SUCCESS;
         }
 
