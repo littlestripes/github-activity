@@ -44,7 +44,10 @@ std::vector<Event> parse_json_response(const std::string& response) {
                 // check for optional fields and set them if available
                 if (it["payload"].contains("action")) {
                     new_event.action = it["payload"]["action"];
-                    if (std::strcmp(new_event.action.value().c_str(), "assigned") == 0) {
+                    if (
+                        std::strcmp(new_event.action.value().c_str(), "assigned") == 0 ||
+                        std::strcmp(new_event.action.value().c_str(), "unassigned") == 0
+                    ) {
                         new_event.assignee = it["payload"]["assignee"]["login"];
                     }
                 }
