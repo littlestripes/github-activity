@@ -1,8 +1,10 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++20 -I./include -g
-LDFLAGS = `pkg-config --libs --cflags fmt` `curl-config --libs`
+LDFLAGS = `curl-config --libs`
 
-SRC = src/main.cpp
+SRC_DIR = src
+
+SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 EXEC = github-activity
 
