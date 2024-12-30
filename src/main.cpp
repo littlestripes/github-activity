@@ -21,18 +21,18 @@ int main(const int argc, const char* argv[]) {
     options.parse_positional({"username"});
     options.positional_help("<username>");
 
+    auto shell_options = options.parse(argc, argv);
+
+    if (shell_options.count("help")) {
+        std::cout << options.help() << std::endl;
+        return EXIT_SUCCESS;
+    }
+    if (shell_options.count("version")) {
+        std::cout << VERSION_STRING << std::endl;
+        return EXIT_SUCCESS;
+    }
+
     try {
-        auto shell_options = options.parse(argc, argv);
-
-        if (shell_options.count("help")) {
-            std::cout << options.help() << std::endl;
-            return EXIT_SUCCESS;
-        }
-        if (shell_options.count("version")) {
-            std::cout << VERSION_STRING << std::endl;
-            return EXIT_SUCCESS;
-        }
-
         auto username = shell_options["username"].as<std::string>();
         const std::string endpoint = format_api_endpoint(username);
 
