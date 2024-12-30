@@ -34,7 +34,7 @@ int main(const int argc, const char* argv[]) {
 
     try {
         auto username = shell_options["username"].as<std::string>();
-        const std::string endpoint = format_api_endpoint(username);
+        const std::string endpoint = "https://api.github.com/users/" + username + "/events";
 
         const std::string response_data = get_json_response(endpoint);
         const std::vector<Event> events = parse_json_response(response_data);
