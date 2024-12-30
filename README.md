@@ -6,13 +6,13 @@ Look [here](https://roadmap.sh/projects/github-user-activity) for project guidel
 
 ## Build
 ### Dependencies
-Fedora: `sudo dnf install gcc-c++ libcurl-devel fmt-devel pkg-config make`
+Fedora: `sudo dnf install gcc-c++ libcurl-devel pkg-config make`
 
-Ubuntu/Debian: `sudo apt install g++ libcurl4-openssl-dev libfmt-dev pkg-config make`
+Ubuntu/Debian: `sudo apt install g++ libcurl4-openssl-dev pkg-config make`
 
-Arch: `sudo pacman -S gcc curl fmt pkg-config make`
+Arch: `sudo pacman -S gcc curl pkg-config make`
 
-macOS: `brew install gcc curl fmt pkg-config make`
+macOS: `brew install gcc curl pkg-config make`
 
 `make`
 
